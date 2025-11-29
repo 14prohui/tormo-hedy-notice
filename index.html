@@ -189,7 +189,9 @@
         }
 
         // --- Gemini API Configurations ---
-        const API_KEY = ""; // Kept empty for Canvas environment
+        // 🚨 這是關鍵修正：請將 "YOUR_GEMINI_API_KEY_HERE" 替換成您在 Google AI Studio 取得的實際 API 金鑰。
+        // 警告：將金鑰直接放在公開程式碼中會有安全風險。
+        const API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
         const QNA_MODEL = "gemini-2.5-flash-preview-09-2025";
         const TTS_MODEL = "gemini-2.5-flash-preview-tts";
 
@@ -315,6 +317,11 @@
          * @param {string} sectionName - 'appointment' or 'perm'.
          */
         async function playSection(sectionName) {
+            if (API_KEY === "YOUR_GEMINI_API_KEY_HERE" || API_KEY === "") {
+                alert("請先在程式碼中填入您的 Gemini API 金鑰，才能使用語音功能！");
+                return;
+            }
+            
             const button = document.getElementById(sectionMap[sectionName].buttonId);
             const originalText = button.innerHTML;
             const textToSpeak = extractSectionText(sectionName);
@@ -403,7 +410,8 @@
 
             } catch (error) {
                 console.error("TTS Error:", error);
-                button.innerHTML = '🔊 發生錯誤';
+                // 使用自定義的訊息框取代 alert
+                document.getElementById('qna-output').innerHTML = '<p class="text-red-500">語音播放失敗：請檢查您的 API 金鑰是否正確，或網路連線是否正常。😢</p>';
                 setTimeout(() => {
                     button.innerHTML = originalText;
                     button.disabled = false;
@@ -417,6 +425,11 @@
          * Handles the Q&A button click, calls Gemini, and displays the response.
          */
         async function askGeminiQnA() {
+            if (API_KEY === "YOUR_GEMINI_API_KEY_HERE" || API_KEY === "") {
+                document.getElementById('qna-output').innerHTML = '<p class="text-red-500">請先在程式碼中填入您的 Gemini API 金鑰，才能使用 AI 問答功能！</p>';
+                return;
+            }
+            
             const inputElement = document.getElementById('qna-input');
             const outputElement = document.getElementById('qna-output');
             const submitButton = document.getElementById('qna-submit-btn');
